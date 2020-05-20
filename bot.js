@@ -40,6 +40,7 @@ var nfetch = require('node-fetch');
 require('dotenv').config();
 var flatUiColors = require('flat-ui-colors')["default"];
 var bot = new Discord.Client();
+var quoteSent = false;
 function randomQuote() {
     return __awaiter(this, void 0, void 0, function () {
         var response, data;
@@ -89,7 +90,7 @@ bot.on('message', function (msg) { return __awaiter(_this, void 0, void 0, funct
                     return __generator(this, function (_f) {
                         switch (_f.label) {
                             case 0:
-                                if (!(el.tone_name == 'Sadness')) return [3 /*break*/, 3];
+                                if (!(el.tone_name == 'Sadness' && !quoteSent)) return [3 /*break*/, 3];
                                 quote = randomQuote();
                                 _b = (_a = msg.channel).send;
                                 _d = (_c = new Discord.MessageEmbed()
@@ -102,11 +103,13 @@ bot.on('message', function (msg) { return __awaiter(_this, void 0, void 0, funct
                             case 2:
                                 _b.apply(_a, [_d.apply(_c, _e.concat([(_f.sent()).quote]))
                                         .setFooter('Made by dolanbright')]);
-                                return [2 /*return*/];
+                                quoteSent = true;
+                                _f.label = 3;
                             case 3: return [2 /*return*/];
                         }
                     });
                 }); });
+                quoteSent = false;
                 return [2 /*return*/];
         }
     });

@@ -4,6 +4,8 @@ require('dotenv').config();
 const flatUiColors = require('flat-ui-colors').default;
 const bot = new Discord.Client();
 
+let quoteSent = false;
+
 async function randomQuote() {
 	const response = await nfetch('https://api.quotable.io/random');
 	const data = await response.json();
@@ -36,7 +38,7 @@ bot.on('message', async (msg) => {
 
 	const toneAnalysis = await toneAnalyzer.tone(toneParams);
 	toneAnalysis.result.document_tone.tones.forEach(async (el) => {
-		if (el.tone_name == 'Sadness') {
+		if (el.tone_name == 'Sadness' && !quoteSent) {
 			const quote = randomQuote();
 			msg.channel.send(
 				new Discord.MessageEmbed()
@@ -45,9 +47,10 @@ bot.on('message', async (msg) => {
 					.addField((await quote).author, (await quote).quote)
 					.setFooter('Made by dolanbright')
 			);
-			return;
+			quoteSent = true;
 		}
 	});
+	quoteSent = false;
 });
 
 bot.login(process.env.BOT_TOKEN);
